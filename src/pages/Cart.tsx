@@ -29,6 +29,52 @@ const Cart: React.FC = () => {
   const [orderError, setOrderError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // GPS Geolocation state
+  const [gpsLoading, setGpsLoading] = useState(false);
+  const [detectedCoords, setDetectedCoords] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setDetectedCoords({ latitude, longitude });
+        
+        try {
+          // Free Nominatim OpenStreetMap Reverse Geocoding API
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          if (response.ok) {
+            const data = await response.json();
+            if (data.display_name) {
+              setNewAddress(data.display_name);
+            } else {
+              setNewAddress(`GPS Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+            }
+          } else {
+            setNewAddress(`GPS Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+          }
+        } catch (err) {
+          console.error("Reverse geocoding failed:", err);
+          setNewAddress(`GPS Location (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
+        } finally {
+          setGpsLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        alert("Failed to access your location. Please check your browser location permissions.");
+        setGpsLoading(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponCode.trim()) return;
@@ -46,10 +92,21 @@ const Cart: React.FC = () => {
 
     try {
       const currentAddresses = currentUser.addresses || [];
-      const updatedAddresses = [...currentAddresses, newAddress.trim()];
+      const addressStr = newAddress.trim();
+      const updatedAddresses = [...currentAddresses, addressStr];
       await updateUserProfile(currentUser.uid, { addresses: updatedAddresses });
-      setSelectedAddress(newAddress.trim());
+      
+      // Save coordinates mapping
+      const savedCoords = JSON.parse(localStorage.getItem('ecom_address_coords') || '{}');
+      savedCoords[addressStr] = detectedCoords || {
+        latitude: 12.9716 + (Math.random() - 0.5) * 0.03,
+        longitude: 77.5946 + (Math.random() - 0.5) * 0.03,
+      };
+      localStorage.setItem('ecom_address_coords', JSON.stringify(savedCoords));
+
+      setSelectedAddress(addressStr);
       setNewAddress('');
+      setDetectedCoords(null);
       setShowAddAddress(false);
     } catch (err) {
       console.error('Failed to save address:', err);
@@ -82,6 +139,12 @@ const Cart: React.FC = () => {
     }
 
     try {
+      const savedCoords = JSON.parse(localStorage.getItem('ecom_address_coords') || '{}');
+      const coordinates = savedCoords[selectedAddress] || {
+        latitude: 12.9716 + (Math.random() - 0.5) * 0.03,
+        longitude: 77.5946 + (Math.random() - 0.5) * 0.03,
+      };
+
       const orderPayload = {
         customerId: currentUser.uid,
         assignedPartnerId: null,
@@ -94,11 +157,7 @@ const Cart: React.FC = () => {
         orderStatus: 'PLACED' as const,
         deliveryAddress: {
           street: selectedAddress,
-          coordinates: {
-            // Randomly offset from Bangalore center for display tracking path
-            latitude: 12.9716 + (Math.random() - 0.5) * 0.03,
-            longitude: 77.5946 + (Math.random() - 0.5) * 0.03,
-          }
+          coordinates: coordinates
         }
       };
 
@@ -239,8 +298,18 @@ const Cart: React.FC = () => {
 
             {/* Add Address Form */}
             {(showAddAddress || !currentUser?.addresses || currentUser.addresses.length === 0) && (
-              <form onSubmit={handleAddAddress} className="space-y-3 bg-slate-900/40 p-4 rounded-xl border border-slate-800">
-                <h4 className="text-xs font-bold text-slate-300">Add New Destination</h4>
+              <form onSubmit={handleAddAddress} className="space-y-3 bg-slate-900/40 p-4 rounded-xl border border-slate-800 animate-fade-in">
+                <div className="flex justify-between items-center pb-1">
+                  <h4 className="text-xs font-bold text-slate-300">Add New Destination</h4>
+                  <button
+                    type="button"
+                    onClick={handleDetectLocation}
+                    disabled={gpsLoading}
+                    className="text-[10px] font-extrabold text-orange-400 hover:text-orange-300 flex items-center space-x-1 transition cursor-pointer"
+                  >
+                    <span>{gpsLoading ? 'Detecting Location...' : 'Use Current GPS'}</span>
+                  </button>
+                </div>
                 <div className="flex space-x-2">
                   <input
                     type="text"
