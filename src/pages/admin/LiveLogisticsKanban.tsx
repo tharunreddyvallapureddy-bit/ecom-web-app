@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { streamOrders, updateOrderStatus, assignRiderToOrder, getDeliveryPartners, updateRiderLocation, updateOrderPaymentStatus } from '../../services/db';
-import { Order, UserProfile } from '../../types';
-import { Check, ClipboardList, ChefHat, Truck, CheckCircle2, ChevronRight, Navigation, RefreshCw, BadgeInfo } from 'lucide-react';
+import type { Order, UserProfile } from '../../types';
+import { ClipboardList, ChefHat, Truck, CheckCircle2, ChevronRight, RefreshCw, BadgeInfo } from 'lucide-react';
 
 const LiveLogisticsKanban: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);

@@ -1,4 +1,4 @@
-import { Product, Coupon, UserProfile, Order, CartItem } from '../types';
+import type { Product, Coupon, UserProfile, Order } from '../types';
 import { isMockMode, db as fDb } from './firebase';
 import { 
   collection, doc, getDoc, getDocs, setDoc, updateDoc, 
@@ -278,12 +278,6 @@ export const updateOrderPaymentStatus = async (orderId: string, status: Order['p
 };
 
 export const assignRiderToOrder = async (orderId: string, riderId: string | null): Promise<void> => {
-  let riderName: string | null = null;
-  if (riderId) {
-    const riderProfile = await getUserProfile(riderId);
-    riderName = riderProfile ? riderProfile.name : 'Delivery Partner';
-  }
-  
   if (isMockMode) {
     const orders = getStorageItem<Order[]>('ecom_orders', []);
     const order = orders.find(o => o.id === orderId);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { streamOrders, updateOrderStatus, updateRiderLocation, updateUserProfile } from '../../services/db';
-import { Order } from '../../types';
-import { MapPin, Navigation, Compass, CircleDollarSign, LogOut, CheckCircle, PackageOpen, AlertCircle, RefreshCw } from 'lucide-react';
+import { streamOrders, updateOrderStatus, updateRiderLocation } from '../../services/db';
+import type { Order } from '../../types';
+import { MapPin, Navigation, CircleDollarSign, LogOut, CheckCircle, PackageOpen, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const DeliveryPortal: React.FC = () => {

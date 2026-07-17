@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../../services/db';
-import { Product } from '../../types';
-import { Edit, Trash, Plus, Check, X, ShieldAlert, Eye, EyeOff, Flame } from 'lucide-react';
+import type { Product } from '../../types';
+import { Trash, Plus, ShieldAlert, Eye, EyeOff, Flame } from 'lucide-react';
 
 const MenuManager: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);

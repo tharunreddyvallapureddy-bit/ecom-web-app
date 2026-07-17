@@ -1,4 +1,4 @@
-import { UserProfile, Product, Coupon, Order, CartItem } from '../types';
+import type { UserProfile, Product, Coupon } from '../types';
 
 // Types for PubSub
 type ListenerCallback = (data: any) => void;
@@ -167,7 +167,7 @@ export const initializeMockDatabase = () => {
     }
   ];
   
-  const users = getStorageItem<UserProfile[]>('ecom_users', defaultUsers);
+  getStorageItem<UserProfile[]>('ecom_users', defaultUsers);
   
   // Set up mock auth user if not present
   if (!sessionStorage.getItem('ecom_current_user')) {

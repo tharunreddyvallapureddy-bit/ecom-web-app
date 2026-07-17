@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { getDeliveryPartners } from '../../services/db';
-import { UserProfile } from '../../types';
-import { Plus, UserCheck, ShieldAlert, Bike, ClipboardCheck, Lock, Mail, User } from 'lucide-react';
+import type { UserProfile } from '../../types';
+import { Plus, UserCheck, ShieldAlert, Bike, Lock, Mail, User } from 'lucide-react';
 
 const DeliveryTeamControl: React.FC = () => {
   const { provisionDeliveryPartner } = useAuth();

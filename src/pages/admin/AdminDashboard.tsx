@@ -7,8 +7,7 @@ import DeliveryTeamControl from './DeliveryTeamControl';
 import LiveLogisticsKanban from './LiveLogisticsKanban';
 import CashSettlementMonitor from './CashSettlementMonitor';
 import { getProducts, streamOrders, getDeliveryPartners, seedLiveDatabase } from '../../services/db';
-import { Order, UserProfile } from '../../types';
-import { LayoutDashboard, Utensils, Tag, Users, Kanban, CircleDollarSign, LogOut, ShieldAlert } from 'lucide-react';
+import { Utensils, Tag, Users, Kanban, CircleDollarSign } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const { currentUser } = useAuth();
@@ -31,7 +30,6 @@ const AdminDashboard: React.FC = () => {
     // Stream stats in real-time
     const unsubscribeOrders = streamOrders((orders) => {
       setOrderCount(orders.length);
-      const activeCount = orders.filter(o => o.orderStatus !== 'DELIVERED').length;
       
       const revenue = orders
         .filter(o => o.paymentStatus === 'PAID')

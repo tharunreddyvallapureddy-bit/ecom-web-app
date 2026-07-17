@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { streamActiveOrder, streamRiderCoordinates, getUserProfile } from '../services/db';
-import { Order, UserProfile } from '../types';
+import type { Order, UserProfile } from '../types';
 import LiveTrackingMap from '../components/LiveTrackingMap';
-import { Check, ShieldAlert, ArrowLeft, Bike, ShoppingBag, MapPin, Store, ChevronRight, Phone } from 'lucide-react';
+import { Check, ShieldAlert, ArrowLeft, Bike, ShoppingBag, Store, Phone } from 'lucide-react';
 
 const Tracking: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();

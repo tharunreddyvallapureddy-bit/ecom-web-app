@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getStorageItem } from '../services/mockFirebase';
-import { Order } from '../types';
-import { isMockMode } from '../services/firebase';
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
-import { db as fDb } from '../services/firebase';
+import type { Order } from '../types';
 import { streamOrders } from '../services/db';
-import { Clock, Navigation, CheckCircle, Flame, ShieldAlert, ArrowRight, DollarSign, Wallet } from 'lucide-react';
+import { Clock, Navigation, ArrowRight, DollarSign, Wallet } from 'lucide-react';
 
 const OrderHistory: React.FC = () => {
   const { currentUser } = useAuth();

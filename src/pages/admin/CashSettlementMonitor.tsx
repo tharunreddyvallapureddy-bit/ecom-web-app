@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getDeliveryPartners, settleRiderCash } from '../../services/db';
-import { UserProfile } from '../../types';
-import { CircleDollarSign, CheckSquare, ShieldCheck, HelpCircle } from 'lucide-react';
+import type { UserProfile } from '../../types';
+import { CircleDollarSign, CheckSquare, ShieldCheck } from 'lucide-react';
 
 const CashSettlementMonitor: React.FC = () => {
   const [riders, setRiders] = useState<UserProfile[]>([]);

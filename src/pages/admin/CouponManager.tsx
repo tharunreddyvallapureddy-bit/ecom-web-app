@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getCoupons, addCoupon, updateCoupon, deleteCoupon } from '../../services/db';
-import { Coupon } from '../../types';
-import { Plus, Trash, ShieldAlert, Check, X, Tag } from 'lucide-react';
+import type { Coupon } from '../../types';
+import { Plus, Trash, ShieldAlert, Tag } from 'lucide-react';
 
 const CouponManager: React.FC = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);

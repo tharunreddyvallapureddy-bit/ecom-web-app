@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getProducts } from '../services/db';
-import { Product } from '../types';
+import type { Product } from '../types';
 import MenuCard from '../components/MenuCard';
 import { Flame, BadgeCheck, UtensilsCrossed, Percent, Search, ArrowRight } from 'lucide-react';
 import { isMockMode } from '../services/firebase';
+import { useCart } from '../context/CartContext';
 
 const Home: React.FC = () => {
+  const { addToCart } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile } from '../types';
+import type { UserProfile } from '../types';
 import { isMockMode, auth as fAuth } from '../services/firebase';
 import { 
   signInWithEmailAndPassword, 
@@ -10,7 +10,7 @@ import {
   signInWithPopup
 } from 'firebase/auth';
 import { getUserProfile, createUserProfile } from '../services/db';
-import { initializeMockDatabase, getStorageItem, setStorageItem } from '../services/mockFirebase';
+import { initializeMockDatabase, getStorageItem, setStorageItem, publishTopic } from '../services/mockFirebase';
 
 interface AuthContextType {
   currentUser: UserProfile | null;
@@ -211,7 +211,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     
     // Lazy imports inside function to avoid secondary App reference problems elsewhere
-    const { initializeApp } = await import('firebase/app');
+    const { initializeApp, deleteApp } = await import('firebase/app');
     const { getAuth: getSecondaryAuth, createUserWithEmailAndPassword: createSecondaryUser } = await import('firebase/auth');
     
     const secondaryApp = initializeApp(firebaseConfig, 'SecondaryAppProvisioner');
@@ -231,10 +231,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           timestamp: Date.now()
         }
       });
-      await secondaryApp.delete();
+      await deleteApp(secondaryApp);
       return profile;
     } catch (e: any) {
-      await secondaryApp.delete();
+      await deleteApp(secondaryApp);
       throw e;
     }
   };
