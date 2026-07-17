@@ -8,8 +8,6 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  // If deploying to https://<USERNAME>.github.io/<REPO-NAME>/, 
-  // uncomment the line below and set it to your repository name:
-  // base: '/<REPO-NAME>/',
+  base: '/ecom-web-app/',
 })
 
