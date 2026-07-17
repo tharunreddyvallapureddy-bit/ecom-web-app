@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
@@ -17,7 +17,7 @@ import DeliveryPortal from './pages/delivery/DeliveryPortal';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <CartProvider>
           <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
@@ -82,7 +82,7 @@ const App: React.FC = () => {
           </div>
         </CartProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
