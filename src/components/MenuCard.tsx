@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Product } from '../types';
+import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, Flame, EyeOff } from 'lucide-react';
 

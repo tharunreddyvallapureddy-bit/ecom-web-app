@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
-import { Navigation, MapPin, Store, Truck } from 'lucide-react';
+
 
 interface Coordinates {
   latitude: number;

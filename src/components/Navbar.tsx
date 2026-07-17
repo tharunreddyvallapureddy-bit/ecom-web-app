@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { ShoppingBag, LogOut, User, LayoutDashboard, ShieldCheck, MapPin, Truck } from 'lucide-react';
+import { ShoppingBag, LogOut, ShieldCheck, Truck } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const { currentUser, logout } = useAuth();
