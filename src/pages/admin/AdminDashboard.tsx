@@ -19,6 +19,7 @@ const AdminDashboard: React.FC = () => {
   const [activeRidersCount, setActiveRidersCount] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [isMenuEmpty, setIsMenuEmpty] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const AdminDashboard: React.FC = () => {
     try {
       await seedLiveDatabase();
       setIsMenuEmpty(false);
-      window.location.reload();
+      setRefreshKey(prev => prev + 1);
     } catch (err) {
       console.error("Failed to seed:", err);
     }
@@ -175,7 +176,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Tab panels */}
-        <div className="glass p-6 rounded-2xl border border-slate-800">
+        <div className="glass p-6 rounded-2xl border border-slate-800" key={refreshKey}>
           {activeTab === 'logistics' && <LiveLogisticsKanban />}
           {activeTab === 'menu' && <MenuManager />}
           {activeTab === 'coupons' && <CouponManager />}
