@@ -74,12 +74,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!currentUser?.uid) return;
 
     if (isMockMode) {
-      const unsubscribeMock = subscribeToTopic(`user_${currentUser.uid}`, (updatedUser) => {
-        if (updatedUser) {
-          setCurrentUser(updatedUser);
-          sessionStorage.setItem('ecom_current_user', JSON.stringify(updatedUser));
+      const unsubscribeMock = subscribeToTopic(
+        `user_${currentUser.uid}`,
+        'auth_profile_listener',
+        (updatedUser: any) => {
+          if (updatedUser) {
+            setCurrentUser(updatedUser);
+            sessionStorage.setItem('ecom_current_user', JSON.stringify(updatedUser));
+          }
         }
-      });
+      );
       return () => unsubscribeMock();
     } else {
       const docRef = doc(fDb, 'users', currentUser.uid);
