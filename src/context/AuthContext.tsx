@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { UserProfile } from '../types';
-import { isMockMode, auth as fAuth } from '../services/firebase';
+import { isMockMode, auth as fAuth, db as fDb } from '../services/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
@@ -10,7 +11,7 @@ import {
   signInWithPopup
 } from 'firebase/auth';
 import { getUserProfile, createUserProfile } from '../services/db';
-import { initializeMockDatabase, getStorageItem, setStorageItem, publishTopic } from '../services/mockFirebase';
+import { initializeMockDatabase, getStorageItem, setStorageItem, publishTopic, subscribeToTopic } from '../services/mockFirebase';
 
 interface AuthContextType {
   currentUser: UserProfile | null;
@@ -67,6 +68,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return unsubscribe;
     }
   }, []);
+
+  // Real-time listener for current user document updates (e.g. new addresses, role shifts)
+  useEffect(() => {
+    if (!currentUser?.uid) return;
+
+    if (isMockMode) {
+      const unsubscribeMock = subscribeToTopic(`user_${currentUser.uid}`, (updatedUser) => {
+        if (updatedUser) {
+          setCurrentUser(updatedUser);
+          sessionStorage.setItem('ecom_current_user', JSON.stringify(updatedUser));
+        }
+      });
+      return () => unsubscribeMock();
+    } else {
+      const docRef = doc(fDb, 'users', currentUser.uid);
+      const unsubscribeSnapshot = onSnapshot(docRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setCurrentUser(docSnap.data() as UserProfile);
+        }
+      });
+      return () => unsubscribeSnapshot();
+    }
+  }, [currentUser?.uid]);
 
   const login = async (email: string, password: string): Promise<UserProfile> => {
     if (isMockMode) {
