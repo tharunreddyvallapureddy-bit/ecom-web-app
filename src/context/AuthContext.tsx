@@ -182,8 +182,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       partnerStatus: 'idle',
       cashCollected: 0,
       currentCoordinates: {
-        latitude: 12.9716, // Default coordinate center
-        longitude: 77.5946,
+        latitude: 14.6626, // Default coordinate center (Nallaballe, AP)
+        longitude: 78.3915,
         timestamp: Date.now()
       },
       createdAt: new Date().toISOString()
@@ -226,8 +226,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         partnerStatus: 'idle',
         cashCollected: 0,
         currentCoordinates: {
-          latitude: 12.9716,
-          longitude: 77.5946,
+          latitude: 14.6626, // Default coordinate center (Nallaballe, AP)
+          longitude: 78.3915,
           timestamp: Date.now()
         }
       });

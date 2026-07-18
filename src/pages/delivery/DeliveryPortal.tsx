@@ -83,8 +83,8 @@ const DeliveryPortal: React.FC = () => {
             return;
           }
           // Incremental walk towards delivery destination
-          const mockLat = 12.9716 + step * 0.001;
-          const mockLng = 77.5946 + step * 0.001;
+          const mockLat = 14.6626 + step * 0.001;
+          const mockLng = 78.3915 + step * 0.001;
           setCoordsBroadcast({ lat: mockLat, lng: mockLng });
           
           await updateRiderLocation(currentUser.uid, {

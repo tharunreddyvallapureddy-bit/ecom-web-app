@@ -14,7 +14,7 @@ const Tracking: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Constants
-  const restaurantCoords = { latitude: 12.9716, longitude: 77.5946 };
+  const restaurantCoords = { latitude: 14.6626, longitude: 78.3915 };
 
   useEffect(() => {
     if (!orderId) return;

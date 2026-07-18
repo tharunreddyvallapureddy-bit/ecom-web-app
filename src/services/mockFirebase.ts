@@ -160,8 +160,8 @@ export const initializeMockDatabase = () => {
       partnerStatus: 'idle',
       cashCollected: 0,
       currentCoordinates: {
-        latitude: 12.9716, // Near Bangalore City Center
-        longitude: 77.5946,
+        latitude: 14.6626, // Near Nallaballe, AP
+        longitude: 78.3915,
         timestamp: Date.now()
       }
     }

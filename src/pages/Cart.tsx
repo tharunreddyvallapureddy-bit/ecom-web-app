@@ -99,8 +99,8 @@ const Cart: React.FC = () => {
       // Save coordinates mapping
       const savedCoords = JSON.parse(localStorage.getItem('ecom_address_coords') || '{}');
       savedCoords[addressStr] = detectedCoords || {
-        latitude: 12.9716 + (Math.random() - 0.5) * 0.03,
-        longitude: 77.5946 + (Math.random() - 0.5) * 0.03,
+        latitude: 14.6626 + (Math.random() - 0.5) * 0.03,
+        longitude: 78.3915 + (Math.random() - 0.5) * 0.03,
       };
       localStorage.setItem('ecom_address_coords', JSON.stringify(savedCoords));
 
@@ -141,8 +141,8 @@ const Cart: React.FC = () => {
     try {
       const savedCoords = JSON.parse(localStorage.getItem('ecom_address_coords') || '{}');
       const coordinates = savedCoords[selectedAddress] || {
-        latitude: 12.9716 + (Math.random() - 0.5) * 0.03,
-        longitude: 77.5946 + (Math.random() - 0.5) * 0.03,
+        latitude: 14.6626 + (Math.random() - 0.5) * 0.03,
+        longitude: 78.3915 + (Math.random() - 0.5) * 0.03,
       };
 
       const orderPayload = {

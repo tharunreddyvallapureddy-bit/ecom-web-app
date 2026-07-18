@@ -86,8 +86,8 @@ const LiveLogisticsKanban: React.FC = () => {
     // Start Simulation: increments coordinates en route from restaurant to customer destination
     setActiveSimulations(prev => ({ ...prev, [orderId]: true }));
 
-    const startLat = 12.9716; // Restaurant center
-    const startLng = 77.5946;
+    const startLat = 14.6626; // Restaurant center (Nallaballe, Muddanur)
+    const startLng = 78.3915;
     const destLat = order.deliveryAddress.coordinates.latitude;
     const destLng = order.deliveryAddress.coordinates.longitude;
 

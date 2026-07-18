@@ -68,7 +68,7 @@ const LiveTrackingMap: React.FC<LiveTrackingMapProps> = ({
       { icon: restaurantIcon }
     )
       .addTo(map)
-      .bindPopup('<b class="text-slate-900">Gourmet Express Kitchen</b>');
+      .bindPopup('<b class="text-slate-900">Gourmet Express Kitchen</b><br/><span class="text-[10px] text-slate-600">2-61, Nallaballe(V), AP</span>');
     restaurantMarkerRef.current = restaurantMarker;
 
     // Create Delivery Icon (Blue)
