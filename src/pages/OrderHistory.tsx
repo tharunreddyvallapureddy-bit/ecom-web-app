@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { Order } from '../types';
-import { streamOrders } from '../services/db';
+import { streamCustomerOrders } from '../services/db';
 import { Clock, Navigation, ArrowRight, DollarSign, Wallet } from 'lucide-react';
 
 const OrderHistory: React.FC = () => {
@@ -17,10 +17,8 @@ const OrderHistory: React.FC = () => {
       return;
     }
 
-    // Stream orders in real-time so that status updates immediately propagate to this page!
-    const unsubscribe = streamOrders((allOrders) => {
-      // Filter for current customer's orders
-      const customerOrders = allOrders.filter(o => o.customerId === currentUser.uid);
+    // Stream customer orders in real-time
+    const unsubscribe = streamCustomerOrders(currentUser.uid, (customerOrders) => {
       setOrders(customerOrders);
       setLoading(false);
     });

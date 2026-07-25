@@ -334,10 +334,43 @@ export const streamOrders = (callback: (orders: Order[]) => void): (() => void) 
   
   const colRef = collection(fDb, 'orders');
   const q = query(colRef, orderBy('createdAt', 'desc'));
-  return onSnapshot(q, (snapshot) => {
-    const orders = snapshot.docs.map(doc => doc.data() as Order);
-    callback(orders);
-  });
+  return onSnapshot(q, 
+    (snapshot) => {
+      const orders = snapshot.docs.map(doc => doc.data() as Order);
+      callback(orders);
+    },
+    (error) => {
+      console.error("Firestore all orders stream failed:", error);
+      callback([]);
+    }
+  );
+};
+
+export const streamCustomerOrders = (customerId: string, callback: (orders: Order[]) => void): (() => void) => {
+  if (isMockMode) {
+    const initialOrders = getStorageItem<Order[]>('ecom_orders', []);
+    const filtered = initialOrders.filter(o => o.customerId === customerId);
+    callback(filtered);
+    return subscribeToTopic('orders_changed', 'cust_order_stream_' + Math.random(), (all) => {
+      if (Array.isArray(all)) {
+        callback(all.filter((o: Order) => o.customerId === customerId));
+      }
+    });
+  }
+  
+  const colRef = collection(fDb, 'orders');
+  const q = query(colRef, where('customerId', '==', customerId));
+  return onSnapshot(q, 
+    (snapshot) => {
+      const orders = snapshot.docs.map(doc => doc.data() as Order);
+      orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      callback(orders);
+    },
+    (error) => {
+      console.error("Firestore customer orders stream failed:", error);
+      callback([]);
+    }
+  );
 };
 
 export const streamActiveOrder = (orderId: string, callback: (order: Order | null) => void): (() => void) => {

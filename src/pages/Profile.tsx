@@ -6,7 +6,7 @@ import {
   updateUserProfile, 
   getCoupons, 
   getProducts, 
-  streamOrders 
+  streamCustomerOrders 
 } from '../services/db';
 import type { Coupon, Product, Order } from '../types';
 import { 
@@ -93,8 +93,7 @@ const Profile: React.FC = () => {
     });
 
     // Stream past orders for statement downloading
-    const unsubscribe = streamOrders((allOrders) => {
-      const userOrders = allOrders.filter(o => o.customerId === currentUser.uid);
+    const unsubscribe = streamCustomerOrders(currentUser.uid, (userOrders) => {
       setOrders(userOrders);
     });
 
