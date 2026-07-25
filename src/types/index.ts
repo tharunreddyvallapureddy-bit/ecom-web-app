@@ -6,6 +6,8 @@ export interface UserProfile {
   createdAt: string;
   addresses?: string[]; // Saved delivery addresses for customers
   cashCollected?: number; // Outstanding COD cash held by delivery_partner
+  phone?: string; // Contact phone number
+  walletBalance?: number; // Gourmet Money wallet balance
   // Only populated if role === 'delivery_partner'
   partnerStatus?: 'idle' | 'delivering';
   currentCoordinates?: {

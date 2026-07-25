@@ -14,6 +14,7 @@ import OrderHistory from './pages/OrderHistory';
 import Tracking from './pages/Tracking';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import DeliveryPortal from './pages/delivery/DeliveryPortal';
+import Profile from './pages/Profile';
 
 const App: React.FC = () => {
   return (
@@ -43,6 +44,14 @@ const App: React.FC = () => {
                   element={
                     <ProtectedRoute allowedRoles={['customer']}>
                       <OrderHistory />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/profile" 
+                  element={
+                    <ProtectedRoute allowedRoles={['customer']}>
+                      <Profile />
                     </ProtectedRoute>
                   } 
                 />
