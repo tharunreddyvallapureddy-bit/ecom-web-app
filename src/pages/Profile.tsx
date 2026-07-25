@@ -17,8 +17,6 @@ import {
   ChevronRight, 
   User, 
   Mail, 
-  Phone, 
-  Crown, 
   FileText, 
   Heart, 
   Smartphone, 
@@ -27,14 +25,13 @@ import {
   Trash2, 
   Plus, 
   X, 
-  Check, 
-  Eye, 
   Sparkles,
-  ShoppingBag
+  ShoppingBag,
+  Tag
 } from 'lucide-react';
 
 const Profile: React.FC = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
