@@ -257,7 +257,34 @@ export const updateOrderStatus = async (orderId: string, status: Order['orderSta
   const docRef = doc(fDb, 'orders', orderId);
   await updateDoc(docRef, { orderStatus: status });
   
-  // Real Firebase side: status cascades will be updated in components/portal
+  try {
+    const orderObj = await getOrder(orderId);
+    if (orderObj) {
+      if (status === 'DELIVERED') {
+        if (orderObj.paymentMethod === 'COD') {
+          await updateDoc(docRef, { paymentStatus: 'PAID' });
+        }
+        if (orderObj.assignedPartnerId) {
+          const riderProfile = await getUserProfile(orderObj.assignedPartnerId);
+          if (riderProfile) {
+            const addedCash = orderObj.paymentMethod === 'COD' ? orderObj.totalAmount : 0;
+            await updateUserProfile(orderObj.assignedPartnerId, {
+              partnerStatus: 'idle',
+              cashCollected: (riderProfile.cashCollected || 0) + addedCash
+            });
+          }
+        }
+      } else if (status === 'PICKED_UP') {
+        if (orderObj.assignedPartnerId) {
+          await updateUserProfile(orderObj.assignedPartnerId, {
+            partnerStatus: 'delivering'
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.error("Failed to run real Firebase status updates cascade:", err);
+  }
 };
 
 export const updateOrderPaymentStatus = async (orderId: string, status: Order['paymentStatus']): Promise<void> => {
