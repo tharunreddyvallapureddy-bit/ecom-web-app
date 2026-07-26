@@ -8,9 +8,7 @@ import {
   signOut, 
   onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup,
-  RecaptchaVerifier,
-  signInWithPhoneNumber
+  signInWithPopup
 } from 'firebase/auth';
 import { getUserProfile, createUserProfile } from '../services/db';
 import { initializeMockDatabase, getStorageItem, setStorageItem, publishTopic, subscribeToTopic } from '../services/mockFirebase';
@@ -23,8 +21,6 @@ interface AuthContextType {
   logout: () => Promise<void>;
   provisionDeliveryPartner: (email: string, password: string, name: string) => Promise<UserProfile>;
   loginWithGoogle: () => Promise<UserProfile>;
-  sendOtp: (phoneNumber: string, recaptchaContainerId: string) => Promise<any>;
-  verifyOtp: (confirmationResult: any, code: string, phoneNumber?: string) => Promise<UserProfile>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -271,69 +267,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const sendOtp = async (phoneNumber: string, recaptchaContainerId: string): Promise<any> => {
-    if (isMockMode) {
-      console.log(`[Mock OTP] Sending OTP to ${phoneNumber}. Simulated code: 123456`);
-      return { mockPhoneNumber: phoneNumber };
-    }
-    
-    const verifier = new RecaptchaVerifier(fAuth, recaptchaContainerId, {
-      size: 'invisible',
-      callback: () => {
-        // reCAPTCHA solved
-      }
-    });
-    
-    const confirmationResult = await signInWithPhoneNumber(fAuth, phoneNumber, verifier);
-    return confirmationResult;
-  };
-
-  const verifyOtp = async (confirmationResult: any, code: string, phoneNumber?: string): Promise<UserProfile> => {
-    if (isMockMode) {
-      if (code !== '123456') {
-        throw new Error('Invalid OTP code. Use 123456 for testing.');
-      }
-      
-      const phone = phoneNumber || confirmationResult.mockPhoneNumber || '+919988776655';
-      const users = getStorageItem<UserProfile[]>('ecom_users', []);
-      let user = users.find(u => u.phone === phone);
-      if (!user) {
-        // Create new customer profile on first time login
-        user = {
-          uid: 'u_phone_' + Date.now(),
-          email: `${phone.replace(/\D/g, '')}@phone.com`,
-          name: 'Customer ' + phone.slice(-4),
-          phone: phone,
-          role: 'customer',
-          addresses: [],
-          createdAt: new Date().toISOString()
-        };
-        users.push(user);
-        setStorageItem('ecom_users', users);
-      }
-      
-      sessionStorage.setItem('ecom_current_user', JSON.stringify(user));
-      setCurrentUser(user);
-      return user;
-    }
-    
-    const result = await confirmationResult.confirm(code);
-    const user = result.user;
-    
-    let profile = await getUserProfile(user.uid);
-    if (!profile) {
-      const realPhone = user.phoneNumber || phoneNumber || '';
-      profile = await createUserProfile(user.uid, {
-        email: user.email || `${realPhone.replace(/\D/g, '')}@phone.com`,
-        name: 'Customer ' + realPhone.slice(-4),
-        phone: realPhone,
-        role: 'customer',
-        addresses: []
-      });
-    }
-    return profile;
-  };
-
   return (
     <AuthContext.Provider value={{
       currentUser,
@@ -342,9 +275,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       register,
       logout,
       provisionDeliveryPartner,
-      loginWithGoogle,
-      sendOtp,
-      verifyOtp
+      loginWithGoogle
     }}>
       {children}
     </AuthContext.Provider>
