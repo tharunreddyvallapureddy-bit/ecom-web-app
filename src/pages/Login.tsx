@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Phone, KeyRound, Smartphone, User, ShieldAlert } from 'lucide-react';
+import { Mail, Lock, Phone, KeyRound, User, ShieldAlert } from 'lucide-react';
 import { isMockMode } from '../services/firebase';
 
 const Login: React.FC = () => {
