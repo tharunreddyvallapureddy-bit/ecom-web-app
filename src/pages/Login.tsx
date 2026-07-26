@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, Shield, User, Truck } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 
 const Login: React.FC = () => {
   const { login, loginWithGoogle } = useAuth();
@@ -35,32 +35,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleQuickLogin = async (role: 'admin' | 'customer' | 'delivery_partner') => {
-    setError('');
-    setLoading(true);
-    let quickEmail = '';
-    let quickPassword = '';
 
-    if (role === 'admin') {
-      quickEmail = 'admin@restaurant.com';
-      quickPassword = 'admin123';
-    } else if (role === 'customer') {
-      quickEmail = 'customer@user.com';
-      quickPassword = 'user123';
-    } else if (role === 'delivery_partner') {
-      quickEmail = 'rider@delivery.com';
-      quickPassword = 'rider123';
-    }
-
-    try {
-      const user = await login(quickEmail, quickPassword);
-      redirectUser(user.role);
-    } catch (err: any) {
-      setError(err.message || 'Quick login failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const redirectUser = (role: 'customer' | 'admin' | 'delivery_partner') => {
     if (role === 'admin') {
@@ -82,7 +57,7 @@ const Login: React.FC = () => {
           <h2 className="text-2xl font-black bg-gradient-to-r from-orange-400 to-amber-400 text-transparent bg-clip-text">
             Welcome Back
           </h2>
-          <p className="text-slate-400 text-xs mt-1.5">Sign in to Gourmet Express or use a mock account</p>
+          <p className="text-slate-400 text-xs mt-1.5">Sign in to your Gourmet Express account</p>
         </div>
 
         {error && (
@@ -152,37 +127,7 @@ const Login: React.FC = () => {
           <span>Sign In with Google</span>
         </button>
 
-        {/* Demo Fast Logins Section */}
-        <div className="mt-8 pt-6 border-t border-slate-800/80">
-          <p className="text-[10px] uppercase font-bold text-center tracking-wider text-slate-500 mb-3">
-            Sandbox Demo Quick Logins
-          </p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => handleQuickLogin('customer')}
-              className="py-1.5 px-2 bg-blue-950/40 hover:bg-blue-900/40 border border-blue-900/60 rounded text-[11px] font-semibold text-blue-400 flex flex-col items-center space-y-1 transition cursor-pointer"
-            >
-              <User size={14} />
-              <span>Customer</span>
-            </button>
-            
-            <button
-              onClick={() => handleQuickLogin('delivery_partner')}
-              className="py-1.5 px-2 bg-emerald-950/40 hover:bg-emerald-900/40 border border-emerald-900/60 rounded text-[11px] font-semibold text-emerald-400 flex flex-col items-center space-y-1 transition cursor-pointer"
-            >
-              <Truck size={14} />
-              <span>Rider</span>
-            </button>
 
-            <button
-              onClick={() => handleQuickLogin('admin')}
-              className="py-1.5 px-2 bg-orange-950/40 hover:bg-orange-900/40 border border-orange-900/60 rounded text-[11px] font-semibold text-orange-400 flex flex-col items-center space-y-1 transition cursor-pointer"
-            >
-              <Shield size={14} />
-              <span>Admin</span>
-            </button>
-          </div>
-        </div>
 
         <div className="mt-6 text-center text-xs text-slate-500">
           New customer?{' '}
